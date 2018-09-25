@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ListarProductosActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvSeleccionarCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/seleccionarCategoria"
+            />
+
+        <Spinner
+            android:id="@+id/cmbProductosCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </Spinner>
+
+        <TextView
+            android:id="@+id/tvListaProductos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/listaProductos"
+            />
+
+        <ListView
+            android:id="@+id/lstProductos"
+            android:layout_width="match_parent"
+            android:layout_height="200pt">
+
+        </ListView>
+
+        <TextView
+            android:id="@+id/cantidadProductos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cantidadProductos"/>
+
+        <EditText
+            android:id="@+id/edtProdCantidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:inputType="number"/>
+
+        <Button
+            android:id="@+id/btnProdAddPedido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/agregar"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
