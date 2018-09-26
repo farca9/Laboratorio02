@@ -20,8 +20,9 @@ public class MainActivity extends AppCompatActivity {
         btnNuevoPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent();
+                Intent i = new Intent(MainActivity.this, NuevoPedidoActivity.class);
                 startActivity(i);
+
             }
         });
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this, ListarProductosActivity.class);
+                i.putExtra("NUEVO_PEDIDO",0);
                 startActivity(i);
             }
         });

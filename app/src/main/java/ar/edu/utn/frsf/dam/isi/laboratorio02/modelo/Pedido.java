@@ -110,6 +110,7 @@ public class Pedido {
                 ", direccionEnvio='" + direccionEnvio + '\'' +
                 ", mailContacto='" + mailContacto + '\'' +
                 ", retirar=" + retirar +
+                ", detalles<>=" + detalle.toString() +
                 '}';
     }
 

@@ -1,10 +1,14 @@
 package ar.edu.utn.frsf.dam.isi.laboratorio02;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -19,16 +23,25 @@ public class ListarProductosActivity extends AppCompatActivity {
     private ArrayAdapter<Categoria> adapterCategoria;
     private ArrayAdapter<Producto> adapterProducto;
     private ProductoRepository productoRepository;
+    private Button btnProdAddPedido;
+    private int pos=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listar_productos);
 
-        /*Bundle extras = getIntent().getExtras();
-        if(extras.isEmpty()){
+        btnProdAddPedido=findViewById(R.id.btnProdAddPedido);
+        btnProdAddPedido.setEnabled(false);
 
-        }*/ //seguir aca
+        Intent intent = getIntent();
+        if(!intent.getExtras().isEmpty()){
+            if(intent.getIntExtra("NUEVO_PEDIDO",-1) != 1){
+                ((Button)findViewById(R.id.btnProdAddPedido)).setEnabled(false);
+                ((EditText)findViewById(R.id.edtProdCantidad)).setEnabled(false);
+            }
+
+        }
 
         productoRepository=new ProductoRepository();
 
@@ -48,12 +61,32 @@ public class ListarProductosActivity extends AppCompatActivity {
                 adapterProducto.clear();
                 adapterProducto.addAll(productoRepository.buscarPorCategoria(productoRepository.getCategorias().get(position)));
                 adapterProducto.notifyDataSetChanged();
+                btnProdAddPedido.setEnabled(false);
                 listView.clearChoices();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                pos=position;
+                btnProdAddPedido.setEnabled(true);
+            }
+        });
+
+        btnProdAddPedido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.putExtra("cantidad", Integer.valueOf((((EditText)findViewById(R.id.edtProdCantidad)).getText().toString())).intValue());
+                i.putExtra("idProducto", adapterProducto.getItem(pos).getId());
+                setResult(Activity.RESULT_OK, i);
+                finish();
             }
         });
     }
