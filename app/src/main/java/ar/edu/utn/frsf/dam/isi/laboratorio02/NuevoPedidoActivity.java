@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
@@ -68,7 +69,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
             optPedidoModoEntrega = findViewById(R.id.optPedidoModoEntrega);
 
             optPedidoEnviar.setChecked(true);
-            
+
 
 
             btnQuitarProducto.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +143,31 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                             pedido.setEstado(Pedido.Estado.REALIZADO);
                             pedidoRepository.guardarPedido(pedido);
 
+                            Runnable r = new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Thread.currentThread().sleep(10000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    // buscar pedidos no aceptados y aceptarlos utomáticamente
+                                    List<Pedido> lista = pedidoRepository.getLista();
+                                    for(Pedido p:lista){
+                                        if(p.getEstado().equals(Pedido.Estado.REALIZADO))
+                                            p.setEstado(Pedido.Estado.ACEPTADO);
+                                    }
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(NuevoPedidoActivity.this,"Informacion de pedidos actualizada!", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+                            };
+                            Thread unHilo = new Thread(r);
+                            unHilo.start();
+
                             startActivity(new Intent(NuevoPedidoActivity.this, HistorialPedidosActivity.class));
                             finish();
 
@@ -200,6 +226,31 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), getString(R.string.error_toast_fecha_invalida), Toast.LENGTH_SHORT).show();
 
                             }
+
+                            Runnable r = new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Thread.currentThread().sleep(10000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    // buscar pedidos no aceptados y aceptarlos utomáticamente
+                                    List<Pedido> lista = pedidoRepository.getLista();
+                                    for(Pedido p:lista){
+                                        if(p.getEstado().equals(Pedido.Estado.REALIZADO))
+                                            p.setEstado(Pedido.Estado.ACEPTADO);
+                                    }
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(NuevoPedidoActivity.this,"Informacion de pedidos actualizada!", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+                            };
+                            Thread unHilo = new Thread(r);
+                            unHilo.start();
 
                             startActivity(new Intent(NuevoPedidoActivity.this, HistorialPedidosActivity.class));
                             finish();
