@@ -88,7 +88,7 @@ public class ListarProductosActivity extends AppCompatActivity {
 
                 try{
 
-                if(Integer.valueOf((((EditText)findViewById(R.id.edtProdCantidad)).getText().toString())).intValue()>1){
+                if(Integer.valueOf((((EditText)findViewById(R.id.edtProdCantidad)).getText().toString())).intValue()>0){
                     Intent i = new Intent();
                     i.putExtra("cantidad", Integer.valueOf((((EditText)findViewById(R.id.edtProdCantidad)).getText().toString())).intValue());
                     i.putExtra("idProducto", adapterProducto.getItem(pos).getId());
