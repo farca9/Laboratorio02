@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
@@ -25,20 +26,22 @@ public class ListarProductosActivity extends AppCompatActivity {
     private ProductoRepository productoRepository;
     private Button btnProdAddPedido;
     private int pos=0;
+    private EditText edtCantidad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listar_productos);
 
+        edtCantidad=findViewById(R.id.edtProdCantidad);
         btnProdAddPedido=findViewById(R.id.btnProdAddPedido);
         btnProdAddPedido.setEnabled(false);
 
         Intent intent = getIntent();
         if(!intent.getExtras().isEmpty()){
             if(intent.getIntExtra("NUEVO_PEDIDO",-1) != 1){
-                ((Button)findViewById(R.id.btnProdAddPedido)).setEnabled(false);
-                ((EditText)findViewById(R.id.edtProdCantidad)).setEnabled(false);
+                findViewById(R.id.btnProdAddPedido).setEnabled(false);
+                findViewById(R.id.edtProdCantidad).setEnabled(false);
             }
 
         }
@@ -82,11 +85,27 @@ public class ListarProductosActivity extends AppCompatActivity {
         btnProdAddPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent();
-                i.putExtra("cantidad", Integer.valueOf((((EditText)findViewById(R.id.edtProdCantidad)).getText().toString())).intValue());
-                i.putExtra("idProducto", adapterProducto.getItem(pos).getId());
-                setResult(Activity.RESULT_OK, i);
-                finish();
+
+                try{
+
+                if(Integer.valueOf((((EditText)findViewById(R.id.edtProdCantidad)).getText().toString())).intValue()>1){
+                    Intent i = new Intent();
+                    i.putExtra("cantidad", Integer.valueOf((((EditText)findViewById(R.id.edtProdCantidad)).getText().toString())).intValue());
+                    i.putExtra("idProducto", adapterProducto.getItem(pos).getId());
+                    setResult(Activity.RESULT_OK, i);
+                    finish();
+                } else {
+                    throw new Exception();
+                }
+
+                }
+                catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), "La cantidad ingresada no es valida", Toast.LENGTH_SHORT).show();
+                }
+
+
+
+
             }
         });
     }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ListarProductosActivity">
+    tools:context=".ListarProductosActivity"
+    android:windowSoftInputMode="adjustResize|stateHidden">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,47 +16,52 @@
             android:id="@+id/tvSeleccionarCategoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/seleccionarCategoria"
-            />
+            android:layout_weight="0"
+            android:text="@string/seleccionarCategoria" />
 
         <Spinner
             android:id="@+id/cmbProductosCategoria"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
         </Spinner>
 
         <TextView
             android:id="@+id/tvListaProductos"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/listaProductos"
-            />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/listaProductos" />
 
         <ListView
             android:id="@+id/lstProductos"
             android:layout_width="match_parent"
-            android:layout_height="200pt">
+            android:layout_height="0dp"
+            android:layout_weight="10">
 
         </ListView>
 
         <TextView
             android:id="@+id/cantidadProductos"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/cantidadProductos"/>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/cantidadProductos" />
 
         <EditText
             android:id="@+id/edtProdCantidad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:inputType="number"/>
+            android:layout_weight="0"
+            android:inputType="number"
+            android:text="1" />
 
         <Button
             android:id="@+id/btnProdAddPedido"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/agregar"/>
+            android:layout_weight="0"
+            android:text="@string/agregar" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

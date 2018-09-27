@@ -4,15 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NuevoPedidoActivity">
+    tools:context=".NuevoPedidoActivity"
+    android:windowSoftInputMode="adjustResize|stateHidden">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="78dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/lblTitulo"
@@ -47,13 +45,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pedido_opt_retira"
+                android:layout_weight="1"
                 />
 
             <RadioButton
                 android:id="@+id/optPedidoEnviar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/pedido_opt_entrega" />
+                android:text="@string/pedido_opt_entrega"
+                android:layout_weight="1"/>
 
         </RadioGroup>
 
@@ -79,10 +79,12 @@
             android:inputType="time"
             android:text="00:00" />
 
+
         <ListView
             android:id="@+id/lstPedidoItems"
             android:layout_width="match_parent"
-            android:layout_height="80pt">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
         </ListView>
 
@@ -95,12 +97,14 @@
                 android:id="@+id/btnPedidoAddProducto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Agregar producto" />
 
             <Button
                 android:id="@+id/btnPedidoQuitarProducto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Quitar Producto" />
         </LinearLayout>
 
@@ -119,12 +123,14 @@
                 android:id="@+id/btnPedidoHacerPedido"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Hacer Pedido" />
 
             <Button
                 android:id="@+id/btnPedidoVolver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Volver" />
         </LinearLayout>
 
