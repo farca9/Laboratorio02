@@ -156,13 +156,17 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                                     for(Pedido p:lista){
                                         if(p.getEstado().equals(Pedido.Estado.REALIZADO))
                                             p.setEstado(Pedido.Estado.ACEPTADO);
+                                            Intent intentAceptado = new Intent(NuevoPedidoActivity.this,EstadoPedidoReceiver.class);
+                                            intentAceptado.putExtra("idPedido",p.getId());
+                                            intentAceptado.setAction(EstadoPedidoReceiver.ESTADO_ACEPTADO);
+                                            sendBroadcast(intentAceptado);
                                     }
-                                    runOnUiThread(new Runnable() {
+                                    /*runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             Toast.makeText(NuevoPedidoActivity.this,"Informacion de pedidos actualizada!", Toast.LENGTH_LONG).show();
                                         }
-                                    });
+                                    });*/
                                 }
                             };
                             Thread unHilo = new Thread(r);
@@ -178,30 +182,6 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                         if (adapter.isEmpty()) {
                             Toast.makeText(getApplicationContext(), getString(R.string.error_toast_lista_vacia), Toast.LENGTH_SHORT).show();
                         } else {
-
-                            //Codigo de la consigna
-                        /*String[] horaIngresada = pedidoHora.split(":");
-                        GregorianCalendar pedidoHoraDate = new GregorianCalendar();
-                        int hora=Integer.valueOf(horaIngresada[0]);
-                        int minuto=Integer.valueOf(horaIngresada[1]);
-
-                        if(hora<0 || hora>23 || minuto<0 || minuto>59){
-                            Toast.makeText(getApplicationContext(), getString(R.string.error_toast_fecha_invalida), Toast.LENGTH_SHORT).show();
-                        } else{
-
-                            pedidoHoraDate.set(Calendar.HOUR_OF_DAY,hora);
-                            pedidoHoraDate.set(Calendar.MINUTE, minuto);
-                            pedidoHoraDate.set(Calendar.SECOND, Integer.valueOf(0));
-
-                            pedido.setMailContacto(pedidoCorreo);
-                            pedido.setFecha(pedidoHoraDate.getTime());
-                            pedido.setDireccionEnvio(pedidoDireccion);
-                            pedido.setRetirar(false);
-                            pedido.setEstado(Pedido.Estado.REALIZADO);
-                            pedidoRepository.guardarPedido(pedido);
-
-                        }
-                        */
 
                             //Usando dateformat
                             Date pedidoHoraDate;
@@ -240,13 +220,17 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                                     for(Pedido p:lista){
                                         if(p.getEstado().equals(Pedido.Estado.REALIZADO))
                                             p.setEstado(Pedido.Estado.ACEPTADO);
+                                            Intent intentAceptado = new Intent(NuevoPedidoActivity.this,EstadoPedidoReceiver.class);
+                                            intentAceptado.putExtra("idPedido",p.getId());
+                                            intentAceptado.setAction(EstadoPedidoReceiver.ESTADO_ACEPTADO);
+                                            sendBroadcast(intentAceptado);
                                     }
-                                    runOnUiThread(new Runnable() {
+                                    /*runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             Toast.makeText(NuevoPedidoActivity.this,"Informacion de pedidos actualizada!", Toast.LENGTH_LONG).show();
                                         }
-                                    });
+                                    });*/
                                 }
                             };
                             Thread unHilo = new Thread(r);
