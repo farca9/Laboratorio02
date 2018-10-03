@@ -16,7 +16,10 @@
             android:id="@+id/lblTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/pedido_titulo" />
+            android:text="@string/pedido_titulo"
+            android:textSize="18dp"
+            android:paddingBottom="4dp"
+            android:gravity="center_horizontal"/>
 
         <TextView
             android:layout_width="match_parent"

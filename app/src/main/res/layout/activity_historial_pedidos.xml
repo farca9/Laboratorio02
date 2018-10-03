@@ -14,7 +14,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pedidos Realizados"/>
+            android:text="Pedidos Realizados"
+            android:textSize="18dp"
+            android:paddingBottom="4dp"
+            android:gravity="center_horizontal"/>
 
         <ListView
             android:layout_width="match_parent"
