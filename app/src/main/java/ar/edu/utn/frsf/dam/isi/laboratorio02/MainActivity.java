@@ -16,12 +16,14 @@ public class MainActivity extends AppCompatActivity {
     private Button btnNuevoPedido;
     private Button btnHistorial;
     private Button btnListaProductos;
-
+    private Button btnPrepararPedidos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         createNotificationChannel();
+
+        btnPrepararPedidos = findViewById(R.id.btnPrepararPedidos);
 
         ImageView logo = ((ImageView)findViewById(R.id.shrimp));
         logo.setImageResource(R.drawable.shrimp);
