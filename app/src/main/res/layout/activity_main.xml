@@ -5,12 +5,24 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:gravity="center_vertical"
+    android:paddingBottom="40dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/shrimp"
+        android:paddingBottom="50dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/main_titulo"
+        android:textSize="18dp"
+        android:paddingBottom="4dp"
+        android:layout_gravity="center_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -18,17 +30,20 @@
     <Button
         android:id="@+id/btnMainNuevoPedido"
         android:text="Nuevo Pedido"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
+        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content" />
     <Button
         android:id="@+id/btnListaProductos"
         android:text="Ver Lista de productos"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
+        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content" />
     <Button
         android:id="@+id/btnHistorialPedidos"
         android:text="Historial de Pedidos"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
+        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

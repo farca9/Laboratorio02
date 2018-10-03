@@ -43,6 +43,8 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
             fila.setTag(holder);
         }
 
+        holder.btnCancelar.setTag(position);
+
         final Pedido pedido = super.getItem(position);
 
         holder.tvMailPedido.setText("Contacto: "+pedido.getMailContacto());
