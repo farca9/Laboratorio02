@@ -28,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
         ImageView logo = ((ImageView)findViewById(R.id.shrimp));
         logo.setImageResource(R.drawable.shrimp);
 
+        btnPrepararPedidos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, PrepararPedidoService.class);
+                startService(i);
+            }
+        });
+
         btnNuevoPedido = (Button) findViewById(R.id.btnMainNuevoPedido);
         btnNuevoPedido.setOnClickListener(new View.OnClickListener() {
             @Override

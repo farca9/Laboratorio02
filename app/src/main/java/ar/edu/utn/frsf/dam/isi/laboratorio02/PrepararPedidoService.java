@@ -29,30 +29,32 @@ public class PrepararPedidoService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        try{
-            Thread.sleep(20000);
-        }
-        catch(InterruptedException e){
-
-        }
-
         pedidoRepository=new PedidoRepository();
+        pedidos = pedidoRepository.getLista(Pedido.Estado.ACEPTADO);
 
-        pedidos=pedidoRepository.getLista();
+        while(!pedidos.isEmpty()){
 
-        for (Pedido p:pedidos) {
-            if(p.getEstado()==Pedido.Estado.ACEPTADO){
-                p.setEstado(Pedido.Estado.EN_PREPARACION);
+            try{
+                Thread.sleep(10000);
             }
+            catch(InterruptedException e){
+
+            }
+
+            if(pedidos.isEmpty()) return;
+
+            Pedido pedido = pedidos.get(0);
+
+            pedido.setEstado(Pedido.Estado.EN_PREPARACION);
+
+            Intent intentPreparacion = new Intent(PrepararPedidoService.this,EstadoPedidoReceiver.class);
+            intentPreparacion.putExtra("idPedido",pedido.getId());
+            intentPreparacion.setAction(EstadoPedidoReceiver.ESTADO_EN_PREPARACION);
+            sendBroadcast(intentPreparacion);
+
+            pedidos=pedidoRepository.getLista(Pedido.Estado.ACEPTADO);
         }
 
-        Intent intentPreparacion = new Intent(PrepararPedidoService.this,EstadoPedidoReceiver.class);
-        //intentPreparacion.putExtra("idPedido",p.getId());
-
-        /* Ver si corresponde un broadcast/notificacion por cada pedido que pasa de acep>enprep, o un bc/notif para todo el conjunto*/
-
-        intentPreparacion.setAction(EstadoPedidoReceiver.ESTADO_EN_PREPARACION);
-        sendBroadcast(intentPreparacion);
-
+        return;
     }
 }
