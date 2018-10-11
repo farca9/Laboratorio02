@@ -45,5 +45,11 @@
         android:layout_width="250dp"
         android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnPrepararPedidos"
+        android:text="Preparar Pedidos"
+        android:layout_width="250dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

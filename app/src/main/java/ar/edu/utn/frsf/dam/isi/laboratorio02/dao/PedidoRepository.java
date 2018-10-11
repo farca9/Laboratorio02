@@ -29,6 +29,16 @@ public class PedidoRepository {
         }
         return null;
     }
+    
+    public List<Pedido> getLista(Pedido.Estado estado){
+        
+        List<Pedido> r = new ArrayList<>();
+        for (Pedido p: LISTA_PEDIDOS) {
+            if(p.getEstado()==estado) r.add(p);
+        }
+
+        return r;
+    }
 
 
 }
