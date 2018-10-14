@@ -111,6 +111,41 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
                 }
             }
 
+            if(intent.getAction() == ESTADO_LISTO){
+
+                if(intent.hasExtra("idPedido")){
+
+                    Pedido pedido = pedidoRepository.buscarPorId(intent.getIntExtra("idPedido",-1));
+
+                    Intent i = new Intent(context, HistorialPedidosActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "CANAL01");
+
+                    builder.setContentText("Tu pedido esta listo");
+
+                    String descripcion = "El costo sera de $"+pedido.total().toString();
+                    if(!pedido.getRetirar()){
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                        descripcion+="\nHora de envio prevista: "+sdf.format(pedido.getFecha());
+                    }else{
+                        descripcion+="\nRetirar en el local";
+                    }
+
+                    builder.setStyle( new NotificationCompat.BigTextStyle().bigText(descripcion));
+
+                    builder.setSmallIcon(R.drawable.shrimp);
+
+                    builder.setContentIntent(PendingIntent.getActivity(context,1,i, PendingIntent.FLAG_UPDATE_CURRENT));
+
+                    builder.setAutoCancel(true);
+
+                    idGen++;
+                    NotificationManagerCompat.from(context).notify(idGen,builder.build());
+
+                }
+            }
+
         }
 
     }
