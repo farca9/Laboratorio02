@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "602297562700",
+    "firebase_url": "https://tp-moviles.firebaseio.com",
+    "project_id": "tp-moviles",
+    "storage_bucket": "tp-moviles.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602297562700:android:38bf568b58a9777a",
+        "android_client_info": {
+          "package_name": "ar.edu.utn.frsf.dam.isi.laboratorio02"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "602297562700-7557sfltei1pad6svu50q4sv1pc55ido.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuHR08RP_YhpB99Q9j0CkIdA9TQIge5gM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

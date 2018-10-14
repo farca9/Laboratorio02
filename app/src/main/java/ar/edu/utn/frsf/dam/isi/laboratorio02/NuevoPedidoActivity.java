@@ -218,12 +218,13 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                                     // buscar pedidos no aceptados y aceptarlos utomáticamente
                                     List<Pedido> lista = pedidoRepository.getLista();
                                     for(Pedido p:lista){
-                                        if(p.getEstado().equals(Pedido.Estado.REALIZADO))
+                                        if(p.getEstado().equals(Pedido.Estado.REALIZADO)) {
                                             p.setEstado(Pedido.Estado.ACEPTADO);
-                                            Intent intentAceptado = new Intent(NuevoPedidoActivity.this,EstadoPedidoReceiver.class);
-                                            intentAceptado.putExtra("idPedido",p.getId());
+                                            Intent intentAceptado = new Intent(NuevoPedidoActivity.this, EstadoPedidoReceiver.class);
+                                            intentAceptado.putExtra("idPedido", p.getId());
                                             intentAceptado.setAction(EstadoPedidoReceiver.ESTADO_ACEPTADO);
                                             sendBroadcast(intentAceptado);
+                                        }
                                     }
                                     /*runOnUiThread(new Runnable() {
                                         @Override
