@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Laboratorio02</string>
+    <string name="main_titulo">Menu de opciones</string>
+    <string name="seleccionarCategoria">Seleccionar una categoria</string>
+    <string name="listaProductos">Lista de productos</string>
+    <string name="cantidadProductos">Cantidad de productos</string>
+    <string name="agregar">Agregar</string>
+    <string name="pedido_titulo">Datos del Pedido</string>
+    <string name="pedido_lbl_correo">Correo Electronico</string>
+    <string name="pedido_lbl_modo_entrega">Modo de Entrega</string>
+    <string name="pedido_opt_retira">Retira en local</string>
+    <string name="pedido_opt_entrega">Enviar a domicilio</string>
+    <string name="pedido_lbl_direccion">Direccion de envio</string>
+    <string name="pedido_lbl_hora_entrega">Hora solicitada (hh:mm)</string>
+    <string name="error_toast_nuevo_pedido">Complete todos los campos</string>
+    <string name="error_toast_lista_vacia">Debe seleccionar algun producto</string>
+    <string name="error_toast_fecha_invalida">El formato de fecha es HH:mm</string>
 </resources>
