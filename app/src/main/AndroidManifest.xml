@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ar.edu.utn.frsf.dam.isi.laboratorio02">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -53,7 +56,10 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".modelo.ConfiguracionActivity"></activity>
+        <activity android:name=".modelo.ConfiguracionActivity" />
+        <activity android:name=".CategoriaActivity"></activity>
+
+
     </application>
 
 </manifest>

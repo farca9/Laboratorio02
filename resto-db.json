@@ -1,0 +1,12 @@
+{
+  "categorias": [
+    { "id": 1, "nombre": "Entrada"},
+    { "id": 2, "nombre": "Plato Principal"},
+    { "id": 3, "nombre": "Postre"},
+    { "id": 4, "nombre": "Bebida"}
+  ],
+  "productos": [
+    { "id": 1, "nombre": "Ensalada de rucula", "descripcion": "rucula parmesano y aceto", "precio":99.99, "categoriaId":1 },
+    { "id": 2, "nombre": "Papas fritas", "descripcion": "French fries con aceite nuevo", "precio":125.99, "categoriaId":1 }
+  ]  
+}
