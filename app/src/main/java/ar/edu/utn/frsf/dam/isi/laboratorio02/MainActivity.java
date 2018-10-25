@@ -11,17 +11,31 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.ConfiguracionActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button btnNuevoPedido;
     private Button btnHistorial;
     private Button btnListaProductos;
     private Button btnPrepararPedidos;
+    private Button btnConfiguracion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         createNotificationChannel();
+
+        btnConfiguracion=findViewById(R.id.btnConfiguracion);
+
+        btnConfiguracion.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ConfiguracionActivity.class));
+            }
+        });
 
         btnPrepararPedidos = findViewById(R.id.btnPrepararPedidos);
 
