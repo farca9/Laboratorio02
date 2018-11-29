@@ -16,14 +16,31 @@
       "nombre": "c4",
       "id": 4
     },
-	{
+    {
       "nombre": "c5",
       "id": 5
     }
   ],
   "productos": [
-	{ "id": 1, "nombre": "Hamburguesa con queso", "descripcion": "muy rica", "precio":99.99, "categoriaId":2 },
-    { "id": 2, "nombre": "Empanada de humita", "descripcion": "muy rica", "precio":125.99, "categoriaId":1 },
-	{ "id": 3, "nombre": "Ravioles de verdura", "descripcion": "muy rica", "precio":125.99, "categoriaId":3 }
+    {
+      "id": 1,
+      "nombre": "Hamburguesa con queso",
+      "descripcion": "muy rica",
+      "precio": 99.99,
+      "categoriaId": 2
+    },
+    {
+      "descripcion": "muy rica",
+      "id": 2,
+      "nombre": "Empanada de humita",
+      "precio": 125.99
+    },
+    {
+      "id": 3,
+      "nombre": "Ravioles de verdura",
+      "descripcion": "muy rica",
+      "precio": 125.99,
+      "categoriaId": 3
+    }
   ]
 }
