@@ -12,12 +12,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
 
 public class CategoriaRest {
 
-    public void crearCategoria(Categoria c) throws Exception{
+    public void crearCategoria(Categoria c) throws Exception {
 
         //Variables de conexión y stream de escritura y lectura
         HttpURLConnection urlConnection = null;
@@ -29,10 +30,10 @@ public class CategoriaRest {
         categoriaJson.put("nombre", c.getNombre());
 
         //Abrir una conexión al servidor para enviar el POST
-        URL url = new URL( "http://10.0.2.2:4000/");
+        URL url = new URL("http://10.0.2.2:5000/categorias");
         urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setChunkedStreamingMode(0);
-        urlConnection.setRequestProperty("Content-Type","application/json");
+        urlConnection.setRequestProperty("Content-Type", "application/json");
         urlConnection.setDoOutput(true);
         urlConnection.setRequestMethod("POST");
 
@@ -80,4 +81,7 @@ public class CategoriaRest {
     }
 
 
+
 }
+
+
