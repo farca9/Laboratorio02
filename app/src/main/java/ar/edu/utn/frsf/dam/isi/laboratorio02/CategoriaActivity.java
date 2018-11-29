@@ -15,6 +15,7 @@ public class CategoriaActivity extends AppCompatActivity {
     private EditText textoCat;
     private Button btnCrear;
     private Button btnMenu;
+    private boolean success=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +35,34 @@ public class CategoriaActivity extends AppCompatActivity {
 
                         try {
                             cr.crearCategoria(new Categoria(textoCat.getText().toString()));
-                            Toast.makeText(getApplicationContext(),"Se ha creado la categoria",Toast.LENGTH_SHORT).show();
-                            textoCat.setText("");
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    Toast.makeText(getApplicationContext(),"Se ha creado la categoria",Toast.LENGTH_SHORT).show();
+                                    textoCat.setText("");
+
+                                }
+                            });
                         }catch(Exception e){
-                            Toast.makeText(getApplicationContext(),"No se ha creado la categoria",Toast.LENGTH_SHORT).show();
+
+                            e.printStackTrace();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    Toast.makeText(getApplicationContext(),"No se ha creado la categoria",Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
                         }
                     }
                 };
 
-                //Thread t= new Thread(r);
-                //t.start();
-                runOnUiThread(r);
+                Thread t= new Thread(r);
+                t.start();
+                //runOnUiThread(r);
 
             }
         });
