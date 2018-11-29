@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
@@ -27,6 +29,8 @@ public class ListarProductosActivity extends AppCompatActivity {
     private Button btnProdAddPedido;
     private int pos=0;
     private EditText edtCantidad;
+    private ArrayList productos;
+    private ArrayList categorias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,55 @@ public class ListarProductosActivity extends AppCompatActivity {
         adapterProducto= new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, productoRepository.buscarPorCategoria(productoRepository.getCategorias().get(0)));
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setAdapter(adapterProducto);
+
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                CategoriaRest catRest = new CategoriaRest();
+                try{
+                    categorias=(ArrayList)catRest.listarTodas();
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapterCategoria = new
+                                ArrayAdapter<Categoria>(ListarProductosActivity.this,
+                                android.R.layout.simple_spinner_dropdown_item,categorias);
+
+                        spinner = (Spinner) findViewById(R.id.cmbProductosCategoria);
+
+                        spinner.setAdapter(adapterCategoria);
+                        spinner.setSelection(0);
+
+                        ((ListView) findViewById(R.id.lstProductos)).setAdapter(adapterProducto);
+
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                                adapterProducto.clear();
+                                productos=(ArrayList)productoRepository.buscarPorCategoria((Categoria)parent.getItemAtPosition(position));
+                                if(!productos.isEmpty()){
+                                    adapterProducto.addAll(productos);
+                                }
+
+                                adapterProducto.notifyDataSetChanged();
+                            }
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {}
+                        });
+                    }
+                });
+
+            }
+        };
+        Thread hiloCargarCombo = new Thread(r);
+        hiloCargarCombo.start();
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
