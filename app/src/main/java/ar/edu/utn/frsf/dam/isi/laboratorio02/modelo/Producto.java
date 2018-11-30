@@ -1,13 +1,24 @@
 package ar.edu.utn.frsf.dam.isi.laboratorio02.modelo;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.util.Objects;
 
 public class Producto {
 
     private Integer id;
+
+
     private String nombre;
+
+
     private String descripcion;
+
+
     private Double precio;
+
+
     private Categoria categoria;
 
     public Producto(String nombre, String descripcion, Double precio, Categoria categoria) {

@@ -11,12 +11,18 @@ public class Pedido {
     public enum Estado { REALIZADO, ACEPTADO, RECHAZADO,EN_PREPARACION,LISTO,ENTREGADO,CANCELADO}
 
     private Integer id;
+
     private Date fecha;
+
     private List<PedidoDetalle> detalle;
+
     private Estado estado;
+
     private String direccionEnvio;
+
     private String mailContacto;
-    private Boolean retirar;
+
+    private boolean retirar;
 
     public String getDireccionEnvio() {
         return direccionEnvio;
