@@ -58,9 +58,8 @@
         </service>
 
         <activity android:name=".modelo.ConfiguracionActivity" />
-        <activity android:name=".CategoriaActivity"></activity>
-
-
+        <activity android:name=".CategoriaActivity" />
+        <activity android:name=".GestionProductoActivity"></activity>
     </application>
 
 </manifest>

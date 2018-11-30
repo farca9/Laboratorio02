@@ -1,12 +1,48 @@
 {
   "categorias": [
-    { "id": 1, "nombre": "Entrada"},
-    { "id": 2, "nombre": "Plato Principal"},
-    { "id": 3, "nombre": "Postre"},
-    { "id": 4, "nombre": "Bebida"}
+    {
+      "nombre": "Empanadas",
+      "id": 1
+    },
+    {
+      "nombre": "Hamburguesas",
+      "id": 2
+    },
+    {
+      "nombre": "Ravioles",
+      "id": 3
+    }
   ],
   "productos": [
-    { "id": 1, "nombre": "Ensalada de rucula", "descripcion": "rucula parmesano y aceto", "precio":99.99, "categoriaId":1 },
-    { "id": 2, "nombre": "Papas fritas", "descripcion": "French fries con aceite nuevo", "precio":125.99, "categoriaId":1 }
-  ]  
+    {
+      "categoria": {
+        "id": 1,
+        "nombre": "Empanadas"
+      },
+      "descripcion": "con humita",
+      "nombre": "Empanada de humita",
+      "precio": 10,
+      "id": 1
+    },
+	{
+      "categoria": {
+        "id": 2,
+        "nombre": "Hamburguesas"
+      },
+      "descripcion": "con lechuga y tomate",
+      "nombre": "Hamburguesa completa",
+      "precio": 12,
+      "id": 2
+    },
+	{
+      "categoria": {
+        "id": 3,
+        "nombre": "Ravioles"
+      },
+      "descripcion": "caseros",
+      "nombre": "Ravioles de verdura",
+      "precio": 15,
+      "id": 3
+    }
+  ]
 }
