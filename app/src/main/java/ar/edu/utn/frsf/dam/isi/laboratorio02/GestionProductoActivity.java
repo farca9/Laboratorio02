@@ -30,12 +30,10 @@ public class GestionProductoActivity extends AppCompatActivity {
     private Button btnBuscar;
     private Button btnBorrar;
     private Boolean flagActualizacion;
-    private SpinnerAdapter adapterCategorias;
+    private ArrayAdapter<Categoria> adapterCategorias;
     private Producto producto;
-    private final ProductoRetrofit clienteRest =
-            RestClient.getInstance()
-                    .getRetrofit()
-                    .create(ProductoRetrofit.class);
+    private final ProductoRetrofit clienteRest = RestClient.getInstance().getRetrofit().create(ProductoRetrofit.class);
+    List<Categoria> categorias;
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +55,21 @@ public class GestionProductoActivity extends AppCompatActivity {
         btnBorrar.setEnabled(false);
         idProductoBuscar.setEnabled(false);
 
-        List<Categoria> categorias = new ArrayList<Categoria>(){};
-        try{
-            categorias=new CategoriaRest().listarTodas();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        adapterCategorias = new ArrayAdapter<Categoria>(GestionProductoActivity.this, android.R.layout.simple_spinner_dropdown_item, categorias);
-        comboCategorias.setAdapter(adapterCategorias);
+        categorias=new ArrayList();
 
+        new Thread(new Runnable(){
 
+            @Override
+            public void run() {
+                try{
+                    categorias=new CategoriaRest().listarTodas();
+                    adapterCategorias = new ArrayAdapter<Categoria>(GestionProductoActivity.this, android.R.layout.simple_spinner_dropdown_item, categorias);
+                    comboCategorias.setAdapter(adapterCategorias);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
         opcionNuevoBusqueda.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -84,7 +87,7 @@ public class GestionProductoActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(!opcionNuevoBusqueda.isChecked()){
-                    Producto p = new Producto(nombreProducto.getText().toString(), Double.valueOf(precioProducto.getText().toString()), (Categoria) comboCategorias.getSelectedItem());
+                    Producto p = new Producto(nombreProducto.getText().toString(), descProducto.getText().toString() ,Double.valueOf(precioProducto.getText().toString()), (Categoria) comboCategorias.getSelectedItem());
 
                     //Crear
                     Call<Producto> altaCall= clienteRest.crearProducto(p);
@@ -110,6 +113,10 @@ public class GestionProductoActivity extends AppCompatActivity {
 
                 else{
                     //Modificar
+                    producto.setNombre(nombreProducto.getText().toString());
+                    producto.setDescripcion(descProducto.getText().toString());
+                    producto.setPrecio(Double.valueOf(precioProducto.getText().toString()));
+                    producto.setCategoria((Categoria)comboCategorias.getSelectedItem());
                     Call<Producto> modificarCall = clienteRest.actualizarProducto(Integer.valueOf(idProductoBuscar.getText().toString()), producto);
 
                     modificarCall.enqueue(new Callback<Producto>() {
@@ -128,6 +135,31 @@ public class GestionProductoActivity extends AppCompatActivity {
                 }
 
                 }
+
+        });
+
+        btnBorrar.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+                if(producto!=null) {
+                    //Eliminar
+                    clienteRest.borrar(producto.getId()).enqueue(new Callback<Producto>() {
+                        @Override
+                        public void onResponse(Call<Producto> call, Response<Producto> response) {
+                            Toast.makeText(GestionProductoActivity.this, "Se ha eliminado el producto exitosamente",Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<Producto> call, Throwable t) {
+                            Toast.makeText(GestionProductoActivity.this, "No se ha eliminado el producto",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+            }
 
         });
 
@@ -155,6 +187,7 @@ public class GestionProductoActivity extends AppCompatActivity {
 
                         comboCategorias.setSelection(position);
                         producto = resp.body();
+                        btnBorrar.setEnabled(true);
                     }
                     @Override
                     public void onFailure(Call<Producto> call, Throwable t) {
@@ -165,6 +198,7 @@ public class GestionProductoActivity extends AppCompatActivity {
                         comboCategorias.setSelection(0);
                         producto = null;
                         Toast.makeText(GestionProductoActivity.this, "No se ha podido encontrar el producto",Toast.LENGTH_SHORT).show();
+                        btnBorrar.setEnabled(false);
                     }
                 });
             }
