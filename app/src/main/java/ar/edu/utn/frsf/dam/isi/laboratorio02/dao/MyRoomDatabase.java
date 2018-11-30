@@ -7,9 +7,10 @@ import android.arch.persistence.room.InvalidationTracker;
 import android.arch.persistence.room.RoomDatabase;
 import android.support.annotation.NonNull;
 
-import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.*;
 
-@Database(entities = {Categoria.class}, version = 1)
+@Database(entities = {Categoria.class, Producto.class}, version = 2)
 public abstract class MyRoomDatabase extends RoomDatabase {
     public abstract CategoriaDAO categoriaDAO();
+    public abstract ProductoDAO productoDAO();
 }

@@ -14,6 +14,7 @@ public class MyDatabase {
 
     private MyRoomDatabase db;
     private CategoriaDAO categoriaDAO;
+    private ProductoDAO productoDAO;
 
     private MyDatabase(Context ctx){
         db = Room.databaseBuilder(ctx,
@@ -21,6 +22,7 @@ public class MyDatabase {
                 .fallbackToDestructiveMigration()
                 .build();
         categoriaDAO=db.categoriaDAO();
+        productoDAO = db.productoDAO();
     }
 
     public void borrarTodo(){
@@ -34,4 +36,8 @@ public class MyDatabase {
     public void setCategoriaDAO(CategoriaDAO categoriaDAO) {
         this.categoriaDAO = categoriaDAO;
     }
+
+    public ProductoDAO getProductoDAO() { return productoDAO; }
+
+    public void setProductoDAO(ProductoDAO productoDAO) { this.productoDAO = productoDAO; }
 }
