@@ -2,9 +2,12 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -54,6 +57,8 @@ public class NuevoPedidoActivity extends AppCompatActivity {
             this.onCreateDetalles(savedInstanceState, getIntent().getIntExtra("idSeleccionado",-1));
         } else {
 
+
+
             pedido = new Pedido();
             productoRepository = new ProductoRepository();
             pedidoRepository = new PedidoRepository();
@@ -68,8 +73,16 @@ public class NuevoPedidoActivity extends AppCompatActivity {
             optPedidoEnviar = findViewById(R.id.optPedidoEnviar);
             optPedidoModoEntrega = findViewById(R.id.optPedidoModoEntrega);
 
-            optPedidoEnviar.setChecked(true);
 
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            ((EditText)findViewById(R.id.edtPedidoCorreo)).setText(preferences.getString("mailPorDefectoPreference",""));
+            if(preferences.getBoolean("retirarPorDefectoPreference",false)) {
+                optPedidoRetira.setChecked(true);
+                optPedidoEnviar.setChecked(false);
+            } else {
+                optPedidoEnviar.setChecked(true);
+                optPedidoRetira.setChecked(false);
+            }
 
 
             btnQuitarProducto.setOnClickListener(new View.OnClickListener() {

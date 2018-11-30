@@ -51,5 +51,23 @@
         android:layout_width="250dp"
         android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnConfiguracion"
+        android:text="Configuracion"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+    <Button
+        android:id="@+id/btnCategoria"
+        android:text="Categorias"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+    <Button
+        android:id="@+id/btnProductos"
+        android:text="Gestionar Productos"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

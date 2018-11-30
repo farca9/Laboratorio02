@@ -11,17 +11,41 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.ConfiguracionActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button btnNuevoPedido;
     private Button btnHistorial;
     private Button btnListaProductos;
     private Button btnPrepararPedidos;
+    private Button btnConfiguracion;
+    private Button btnCategoria;
+    private Button btnProductos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         createNotificationChannel();
+
+        btnCategoria=findViewById(R.id.btnCategoria);
+        btnCategoria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, CategoriaActivity.class));
+            }
+        });
+
+        btnConfiguracion=findViewById(R.id.btnConfiguracion);
+
+        btnConfiguracion.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ConfiguracionActivity.class));
+            }
+        });
 
         btnPrepararPedidos = findViewById(R.id.btnPrepararPedidos);
 
@@ -61,6 +85,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this, ListarProductosActivity.class);
                 i.putExtra("NUEVO_PEDIDO",0);
+                startActivity(i);
+            }
+        });
+
+
+        btnProductos = (Button) findViewById(R.id.btnProductos);
+        btnProductos.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, GestionProductoActivity.class);
                 startActivity(i);
             }
         });
