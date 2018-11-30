@@ -15,6 +15,8 @@ public class MyDatabase {
     private MyRoomDatabase db;
     private CategoriaDAO categoriaDAO;
     private ProductoDAO productoDAO;
+    private PedidoDetalleDAO pedidoDetalleDAO;
+    private PedidoDAO pedidoDAO;
 
     private MyDatabase(Context ctx){
         db = Room.databaseBuilder(ctx,
@@ -23,6 +25,8 @@ public class MyDatabase {
                 .build();
         categoriaDAO=db.categoriaDAO();
         productoDAO = db.productoDAO();
+        pedidoDAO=db.pedidoDAO();
+        pedidoDetalleDAO=db.pedidoDetalleDAO();
     }
 
     public void borrarTodo(){
@@ -40,4 +44,20 @@ public class MyDatabase {
     public ProductoDAO getProductoDAO() { return productoDAO; }
 
     public void setProductoDAO(ProductoDAO productoDAO) { this.productoDAO = productoDAO; }
+
+    public PedidoDetalleDAO getPedidoDetalleDAO() {
+        return pedidoDetalleDAO;
+    }
+
+    public void setPedidoDetalleDAO(PedidoDetalleDAO pedidoDetalleDAO) {
+        this.pedidoDetalleDAO = pedidoDetalleDAO;
+    }
+
+    public PedidoDAO getPedidoDAO() {
+        return pedidoDAO;
+    }
+
+    public void setPedidoDAO(PedidoDAO pedidoDAO) {
+        this.pedidoDAO = pedidoDAO;
+    }
 }

@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.MyDatabase;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoAdapter;
 
@@ -28,7 +29,7 @@ public class HistorialPedidosActivity extends AppCompatActivity {
         btnHistorialNuevo=findViewById(R.id.btnHistorialNuevo);
         lstHistorialPedidos=findViewById(R.id.lstHistorialPedidos);
 
-        adapter=new PedidoAdapter(HistorialPedidosActivity.this, new PedidoRepository().getLista());
+        adapter=new PedidoAdapter(HistorialPedidosActivity.this,  MyDatabase.getInstance(HistorialPedidosActivity.this).getPedidoDAO().getLista());
         lstHistorialPedidos.setAdapter(adapter);
 
         btnHistorialNuevo.setOnClickListener(new View.OnClickListener() {

@@ -8,12 +8,14 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.MyDatabase;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoDAO;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 
 public class PrepararPedidoService extends IntentService {
 
-    private PedidoRepository pedidoRepository;
+    private PedidoDAO pedidoRepository;
     private List<Pedido> pedidos;
 
     public PrepararPedidoService() {
@@ -29,8 +31,11 @@ public class PrepararPedidoService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        pedidoRepository=new PedidoRepository();
-        pedidos = pedidoRepository.getLista(Pedido.Estado.ACEPTADO);
+        pedidoRepository=MyDatabase.getInstance(PrepararPedidoService.this).getPedidoDAO();
+        pedidos = pedidoRepository.getLista();
+        for(int i=0;i<pedidos.size();i++){
+            if(pedidos.get(i).getEstado()!=Pedido.Estado.ACEPTADO) pedidos.remove(pedidos.get(i));
+        }
 
         while(!pedidos.isEmpty()){
 
@@ -52,7 +57,10 @@ public class PrepararPedidoService extends IntentService {
             intentPreparacion.setAction(EstadoPedidoReceiver.ESTADO_EN_PREPARACION);
             sendBroadcast(intentPreparacion);
 
-            pedidos=pedidoRepository.getLista(Pedido.Estado.ACEPTADO);
+            pedidos = pedidoRepository.getLista();
+            for(int i=0;i<pedidos.size();i++){
+                if(pedidos.get(i).getEstado()!=Pedido.Estado.ACEPTADO) pedidos.remove(pedidos.get(i));
+            }
         }
 
         return;

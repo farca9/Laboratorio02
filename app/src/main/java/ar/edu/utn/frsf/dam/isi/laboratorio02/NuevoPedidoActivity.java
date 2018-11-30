@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.MyDatabase;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoDAO;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
@@ -39,7 +41,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
 
     private int pos=-1;
     private Pedido pedido;
-    private PedidoRepository pedidoRepository;
+    private PedidoDAO pedidoRepository;
     private ProductoRepository productoRepository;
     private RadioButton optPedidoRetira;
     private RadioButton optPedidoEnviar;
@@ -61,7 +63,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
 
             pedido = new Pedido();
             productoRepository = new ProductoRepository();
-            pedidoRepository = new PedidoRepository();
+            pedidoRepository = MyDatabase.getInstance(NuevoPedidoActivity.this).getPedidoDAO();
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_nuevo_pedido);
@@ -303,7 +305,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_pedido);
 
-        Pedido pedido = new PedidoRepository().buscarPorId(id);
+        Pedido pedido = pedidoRepository.buscarPorId(id);
 
         EditText edtPedidoCorreo=findViewById(R.id.edtPedidoCorreo);
         edtPedidoCorreo.setText(pedido.getMailContacto());

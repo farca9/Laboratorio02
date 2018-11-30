@@ -12,12 +12,14 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.MyDatabase;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoDAO;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 
 public class EstadoPedidoReceiver extends BroadcastReceiver {
 
-    PedidoRepository pedidoRepository = new PedidoRepository();
+
 
     public static final String ESTADO_ACEPTADO = "ar.edu.utn.frsf.dam.isi.laboratorio02.ESTADO_ACEPTADO";
     public static final String ESTADO_CANCELADO = "ar.edu.utn.frsf.dam.isi.laboratorio02.ESTADO_CANCELADO";
@@ -28,6 +30,8 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        PedidoDAO pedidoRepository = MyDatabase.getInstance(context).getPedidoDAO();
 
         if(intent.getAction() == null){
             return;
