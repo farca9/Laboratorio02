@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.CategoriaDAO;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.MyDatabase;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.MyRoomDatabase;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
 
 public class CategoriaActivity extends AppCompatActivity {
@@ -28,6 +31,7 @@ public class CategoriaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                /* ---Codigo Retrofit
                 Runnable r = new Runnable() {
                     @Override
                     public void run() {
@@ -63,6 +67,22 @@ public class CategoriaActivity extends AppCompatActivity {
                 Thread t= new Thread(r);
                 t.start();
                 //runOnUiThread(r);
+
+                */
+
+
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Categoria categoria = new Categoria();
+                        categoria.setNombre(textoCat.getText().toString());
+                        MyDatabase.getInstance(CategoriaActivity.this).getCategoriaDAO().insert(categoria);
+                    }
+                }).start();
+
+
+
 
             }
         });
