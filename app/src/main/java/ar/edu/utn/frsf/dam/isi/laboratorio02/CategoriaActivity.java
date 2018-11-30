@@ -83,7 +83,6 @@ public class CategoriaActivity extends AppCompatActivity {
 
 
 
-
             }
         });
 
