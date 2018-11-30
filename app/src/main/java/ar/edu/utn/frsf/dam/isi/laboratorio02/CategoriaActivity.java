@@ -78,6 +78,14 @@ public class CategoriaActivity extends AppCompatActivity {
                         Categoria categoria = new Categoria();
                         categoria.setNombre(textoCat.getText().toString());
                         MyDatabase.getInstance(CategoriaActivity.this).getCategoriaDAO().insert(categoria);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                Toast.makeText(getApplicationContext(),"Se ha creado exitosamente la categoria",Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        });
                     }
                 }).start();
 

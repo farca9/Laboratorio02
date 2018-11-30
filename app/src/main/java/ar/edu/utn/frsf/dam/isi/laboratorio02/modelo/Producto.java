@@ -21,6 +21,9 @@ public class Producto {
     @Embedded(prefix = "cat_")
     private Categoria categoria;
 
+    public Producto() {
+    }
+
     public Producto(String nombre, String descripcion, Double precio, Categoria categoria) {
         this.nombre = nombre;
         this.descripcion = descripcion;
