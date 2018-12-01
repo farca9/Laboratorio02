@@ -21,7 +21,7 @@ public class PedidoDetalle {
     private Pedido pedido;
 
     public PedidoDetalle(Integer cantidad, Producto producto) {
-        id=ID_DETALLE++;
+        //id=ID_DETALLE++;
         this.cantidad = cantidad;
         this.producto = producto;
     }

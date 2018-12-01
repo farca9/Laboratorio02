@@ -11,16 +11,10 @@ import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoConDetalles;
 public interface PedidoDAO {
 
     @Query("SELECT * FROM PEDIDO")
-    List<Pedido> getAll();
+    List<PedidoConDetalles> getAll();
 
-    @Query("SELECT * FROM PEDIDO")
-    List<Pedido> getLista();
-
-    //@Query("SELECT * FROM PEDIDO WHERE estado=(:estado)")
-    //List<Pedido> getLista(Pedido.Estado estado);
-
-    @Query("SELECT * FROM PEDIDO WHERE id=(:id) LIMIT 0,1")
-    Pedido buscarPorId(Integer id);
+    @Query("SELECT * FROM PEDIDO WHERE id=(:idPedido)")
+    List<PedidoConDetalles> getPedidoId(int idPedido);
 
     @Insert
     long guardarPedido (Pedido pedido);

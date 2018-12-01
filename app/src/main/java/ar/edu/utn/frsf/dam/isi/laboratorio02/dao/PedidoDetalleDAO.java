@@ -12,6 +12,9 @@ public interface PedidoDetalleDAO {
     @Query("SELECT * FROM PedidoDetalle")
     List<PedidoDetalle> getAll();
 
+    @Query("SELECT * FROM PedidoDetalle WHERE ped_id=(:idPedido)")
+    List<PedidoDetalle> getConPedidoId(int idPedido);
+
     @Insert
     long insert (PedidoDetalle pedidoDetalle);
 
