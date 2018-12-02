@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.MyDatabase;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.ProductoRepository;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
@@ -25,12 +26,12 @@ public class ListarProductosActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter<Categoria> adapterCategoria;
     private ArrayAdapter<Producto> adapterProducto;
-    private ProductoRepository productoRepository;
+    private MyDatabase db;
     private Button btnProdAddPedido;
     private int pos=0;
     private EditText edtCantidad;
-    private ArrayList productos;
-    private ArrayList categorias;
+    private ArrayList<Producto> productos;
+    private ArrayList<Categoria> categorias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,8 @@ public class ListarProductosActivity extends AppCompatActivity {
         edtCantidad=findViewById(R.id.edtProdCantidad);
         btnProdAddPedido=findViewById(R.id.btnProdAddPedido);
         btnProdAddPedido.setEnabled(false);
+        spinner = (Spinner) findViewById(R.id.cmbProductosCategoria);
+        listView = (ListView) findViewById(R.id.lstProductos);
 
         Intent intent = getIntent();
         if(!intent.getExtras().isEmpty()){
@@ -50,20 +53,37 @@ public class ListarProductosActivity extends AppCompatActivity {
 
         }
 
-        productoRepository=new ProductoRepository();
+        db=MyDatabase.getInstance(ListarProductosActivity.this);
 
-        spinner = (Spinner) findViewById(R.id.cmbProductosCategoria);
-        adapterCategoria = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, productoRepository.getCategorias());
-        adapterCategoria.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapterCategoria);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-        listView = (ListView) findViewById(R.id.lstProductos);
-        adapterProducto= new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, productoRepository.buscarPorCategoria(productoRepository.getCategorias().get(0)));
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listView.setAdapter(adapterProducto);
+                categorias= (ArrayList) db.getCategoriaDAO().getAll();
+                productos = (ArrayList) db.buscarProductosPorCategoria(categorias.get(0));
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 
 
-        Runnable r = new Runnable() {
+                        adapterCategoria = new ArrayAdapter<Categoria>(ListarProductosActivity.this, android.R.layout.simple_spinner_item, categorias);
+                        adapterCategoria.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(adapterCategoria);
+
+
+                        adapterProducto= new ArrayAdapter<Producto>(ListarProductosActivity.this, android.R.layout.simple_list_item_single_choice, productos);
+                        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                        listView.setAdapter(adapterProducto);
+
+                    }
+                });
+
+            }
+        }).start();
+
+
+        /*Runnable r = new Runnable() {
             @Override
             public void run() {
                 CategoriaRest catRest = new CategoriaRest();
@@ -110,15 +130,33 @@ public class ListarProductosActivity extends AppCompatActivity {
         };
         Thread hiloCargarCombo = new Thread(r);
         hiloCargarCombo.start();
+        */
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                adapterProducto.clear();
-                adapterProducto.addAll(productoRepository.buscarPorCategoria(productoRepository.getCategorias().get(position)));
-                adapterProducto.notifyDataSetChanged();
-                btnProdAddPedido.setEnabled(false);
-                listView.clearChoices();
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        productos= (ArrayList<Producto>) db.buscarProductosPorCategoria(categorias.get(position));
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                adapterProducto.clear();
+                                adapterProducto.addAll(productos);
+                                adapterProducto.notifyDataSetChanged();
+                                btnProdAddPedido.setEnabled(false);
+                                listView.clearChoices();
+
+                            }
+                        });
+                    }
+                }).start();
+
             }
 
             @Override

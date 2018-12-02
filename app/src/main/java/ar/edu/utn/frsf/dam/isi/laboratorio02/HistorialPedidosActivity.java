@@ -9,7 +9,11 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.util.List;
+
+import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.MyDatabase;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.dao.PedidoRepository;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoAdapter;
 
 public class HistorialPedidosActivity extends AppCompatActivity {
@@ -18,6 +22,7 @@ public class HistorialPedidosActivity extends AppCompatActivity {
     private Button btnHistorialMenu;
     private ListView lstHistorialPedidos;
     private PedidoAdapter adapter;
+    private List<Pedido> pedidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +33,22 @@ public class HistorialPedidosActivity extends AppCompatActivity {
         btnHistorialNuevo=findViewById(R.id.btnHistorialNuevo);
         lstHistorialPedidos=findViewById(R.id.lstHistorialPedidos);
 
-        adapter=new PedidoAdapter(HistorialPedidosActivity.this, new PedidoRepository().getLista());
-        lstHistorialPedidos.setAdapter(adapter);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                pedidos= MyDatabase.getInstance(HistorialPedidosActivity.this).allPedidos();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter=new PedidoAdapter(HistorialPedidosActivity.this, pedidos);
+                        lstHistorialPedidos.setAdapter(adapter);
+                    }
+                });
+            }
+        }).start();
+
+
 
         btnHistorialNuevo.setOnClickListener(new View.OnClickListener() {
             @Override
