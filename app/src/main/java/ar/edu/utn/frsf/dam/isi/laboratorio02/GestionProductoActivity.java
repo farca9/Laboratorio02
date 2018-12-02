@@ -312,6 +312,13 @@ public class GestionProductoActivity extends AppCompatActivity {
                     }
                 }).start();
 
+                btnMenu.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
 
 
             }

@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 
 import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.*;
 
-@Database(entities = {Categoria.class, Producto.class, Pedido.class, PedidoDetalle.class}, version = 2)
+@Database(entities = {Categoria.class, Producto.class, Pedido.class, PedidoDetalle.class}, version = 5)
 public abstract class MyRoomDatabase extends RoomDatabase {
     public abstract CategoriaDAO categoriaDAO();
     public abstract ProductoDAO productoDAO();

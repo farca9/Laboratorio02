@@ -17,7 +17,7 @@ public interface PedidoDAO {
     List<PedidoConDetalles> getPedidoId(int idPedido);
 
     @Insert
-    long guardarPedido (Pedido pedido);
+    long insert (Pedido pedido);
 
     @Delete
     void delete (Pedido pedido);

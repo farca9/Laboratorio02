@@ -3,6 +3,15 @@ package ar.edu.utn.frsf.dam.isi.laboratorio02.dao;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Categoria;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Pedido;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoConDetalles;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.PedidoDetalle;
+import ar.edu.utn.frsf.dam.isi.laboratorio02.modelo.Producto;
+
 public class MyDatabase {
 
     private static MyDatabase _INSTANCIA_UNICA=null;
@@ -60,4 +69,69 @@ public class MyDatabase {
     public void setPedidoDAO(PedidoDAO pedidoDAO) {
         this.pedidoDAO = pedidoDAO;
     }
+
+    public Pedido buscarPedidoById(int idPedido){
+
+        List<PedidoConDetalles> retorno = this.getPedidoDAO().getPedidoId(idPedido);
+        Pedido pedido = new Pedido();
+        if(!retorno.isEmpty()){
+            PedidoConDetalles first = retorno.get(0);
+            pedido.setId(first.getPedido().getId());
+            pedido.setEstado(first.getPedido().getEstado());
+            pedido.setRetirar(first.getPedido().getRetirar());
+            pedido.setDireccionEnvio(first.getPedido().getDireccionEnvio());
+            pedido.setMailContacto(first.getPedido().getMailContacto());
+            pedido.setDetalle(first.getDetalles());
+        }
+        return pedido;
+    }
+
+    public List<Pedido> allPedidos(){
+
+        List<PedidoConDetalles> query = this.getPedidoDAO().getAll();
+        List<Pedido> retorno = new ArrayList<>();
+        for (PedidoConDetalles pedidoConDetalles: query){
+
+            Pedido pedido = new Pedido();
+
+            pedido.setId(pedidoConDetalles.getPedido().getId());
+            pedido.setEstado(pedidoConDetalles.getPedido().getEstado());
+            pedido.setRetirar(pedidoConDetalles.getPedido().getRetirar());
+            pedido.setDireccionEnvio(pedidoConDetalles.getPedido().getDireccionEnvio());
+            pedido.setMailContacto(pedidoConDetalles.getPedido().getMailContacto());
+            pedido.setDetalle(pedidoConDetalles.getDetalles());
+
+            retorno.add(pedido);
+
+        }
+
+        return retorno;
+
+    }
+
+    public List<Producto> buscarProductosPorCategoria(Categoria categoria){
+
+        List<Producto> productos = this.getProductoDAO().getAll();
+        List<Producto> result = new ArrayList<>();
+        for (Producto producto:productos){
+            if(producto.getCategoria().equals(categoria)) result.add(producto);
+        }
+        return result;
+    }
+
+    public void guardarPedido(Pedido pedido){
+
+        long idGenerado = this.getPedidoDAO().insert(pedido);
+        pedido.setId((int)idGenerado);
+        for (PedidoDetalle pedidoDetalle : pedido.getDetalle()){
+            pedidoDetalle.setPedido(pedido);
+            this.getPedidoDetalleDAO().insert(pedidoDetalle);
+        }
+
+    }
+
+    public void actualizarPedido(Pedido pedido){
+        this.getPedidoDAO().update(pedido);
+    }
+
 }

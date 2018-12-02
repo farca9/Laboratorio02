@@ -18,6 +18,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -41,8 +42,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
 
     private int pos=-1;
     private Pedido pedido;
-    private PedidoDAO pedidoRepository;
-    private ProductoRepository productoRepository;
+    private MyDatabase db;
     private RadioButton optPedidoRetira;
     private RadioButton optPedidoEnviar;
     private RadioGroup optPedidoModoEntrega;
@@ -51,9 +51,12 @@ public class NuevoPedidoActivity extends AppCompatActivity {
     private Button btnPedidoHacerPedido;
     private Button btnQuitarProducto;
     private ArrayAdapter<PedidoDetalle> adapter;
+    private Producto producto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        db=MyDatabase.getInstance(NuevoPedidoActivity.this);
 
         if(getIntent().getIntExtra("idSeleccionado",-1)!=-1){
             this.onCreateDetalles(savedInstanceState, getIntent().getIntExtra("idSeleccionado",-1));
@@ -62,8 +65,7 @@ public class NuevoPedidoActivity extends AppCompatActivity {
 
 
             pedido = new Pedido();
-            productoRepository = new ProductoRepository();
-            pedidoRepository = MyDatabase.getInstance(NuevoPedidoActivity.this).getPedidoDAO();
+
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_nuevo_pedido);
@@ -156,7 +158,13 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                             pedido.setDireccionEnvio(null);
                             pedido.setRetirar(true);
                             pedido.setEstado(Pedido.Estado.REALIZADO);
-                            pedidoRepository.guardarPedido(pedido);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    db.guardarPedido(pedido);
+                                    db.allPedidos();
+                                }
+                            }).start();
 
                             Runnable r = new Runnable() {
                                 @Override
@@ -167,10 +175,12 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                     // buscar pedidos no aceptados y aceptarlos utomáticamente
-                                    List<Pedido> lista = pedidoRepository.getLista();
+                                    List<Pedido> lista = db.allPedidos();
                                     for(Pedido p:lista){
                                         if(p.getEstado().equals(Pedido.Estado.REALIZADO))
                                             p.setEstado(Pedido.Estado.ACEPTADO);
+                                            //SE AGREGA LA ACTUALIZACION DEL PEDIDO
+                                            db.actualizarPedido(p);
                                             Intent intentAceptado = new Intent(NuevoPedidoActivity.this,EstadoPedidoReceiver.class);
                                             intentAceptado.putExtra("idPedido",p.getId());
                                             intentAceptado.setAction(EstadoPedidoReceiver.ESTADO_ACEPTADO);
@@ -213,7 +223,12 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                                 pedido.setDireccionEnvio(pedidoDireccion);
                                 pedido.setRetirar(false);
                                 pedido.setEstado(Pedido.Estado.REALIZADO);
-                                pedidoRepository.guardarPedido(pedido);
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        db.guardarPedido(pedido);
+                                    }
+                                }).start();
 
 
                             } catch (ParseException e) {
@@ -231,10 +246,12 @@ public class NuevoPedidoActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                     // buscar pedidos no aceptados y aceptarlos utomáticamente
-                                    List<Pedido> lista = pedidoRepository.getLista();
+                                    List<Pedido> lista = db.allPedidos();
                                     for(Pedido p:lista){
                                         if(p.getEstado().equals(Pedido.Estado.REALIZADO)) {
                                             p.setEstado(Pedido.Estado.ACEPTADO);
+                                            //SE AGREGA LA ACTUALIZACION DEL PEDIDO
+                                            db.actualizarPedido(p);
                                             Intent intentAceptado = new Intent(NuevoPedidoActivity.this, EstadoPedidoReceiver.class);
                                             intentAceptado.putExtra("idPedido", p.getId());
                                             intentAceptado.setAction(EstadoPedidoReceiver.ESTADO_ACEPTADO);
@@ -279,84 +296,110 @@ public class NuevoPedidoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         if(requestCode==1 && resultCode== Activity.RESULT_OK){
-            Producto prod;
-            int id = data.getIntExtra("idProducto",0);
-            prod=productoRepository.buscarPorId(id);
+            final int id = data.getIntExtra("idProducto",0);
 
-            int cantidad = data.getIntExtra("cantidad",0);
+            final int cantidad = data.getIntExtra("cantidad",0);
 
-            PedidoDetalle pedidoDetalle = new PedidoDetalle(cantidad,prod);
-            pedido.agregarDetalle(pedidoDetalle);
-            //pedidoDetalle.setPedido(pedido);
-            pedidoDetalle.setProducto(prod);
-            pedidoDetalle.setCantidad(cantidad);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    producto=db.getProductoDAO().getProducto(id).get(0);
+                    PedidoDetalle pedidoDetalle = new PedidoDetalle(cantidad,producto);
+                    pedido.agregarDetalle(pedidoDetalle);
+                    //pedidoDetalle.setPedido(pedido);
+                    pedidoDetalle.setProducto(producto);
+                    pedidoDetalle.setCantidad(cantidad);
 
-            Double costoTotal = pedido.total();
 
-            ((TextView)findViewById(R.id.lblTotalPedido)).setText("Costo total de $"+costoTotal.toString());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
 
-            ((ArrayAdapter)listViewDetalle.getAdapter()).notifyDataSetChanged();
+                            Double costoTotal = pedido.total();
+
+                            ((TextView)findViewById(R.id.lblTotalPedido)).setText("Costo total de $"+costoTotal.toString());
+
+                            ((ArrayAdapter)listViewDetalle.getAdapter()).notifyDataSetChanged();
+                        }
+                    });
+                }
+            }).start();
+
         }
 
     }
 
-    protected void onCreateDetalles(Bundle savedInstanceState, int id){
+    protected void onCreateDetalles(Bundle savedInstanceState, final int id){
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_pedido);
 
-        Pedido pedido = pedidoRepository.buscarPorId(id);
-
-        EditText edtPedidoCorreo=findViewById(R.id.edtPedidoCorreo);
-        edtPedidoCorreo.setText(pedido.getMailContacto());
-        edtPedidoCorreo.setEnabled(false);
-
-        EditText hora = findViewById(R.id.edtPedidoHoraEntrega);
-        EditText direccion = findViewById(R.id.edtPedidoDireccion);
-
-        if(pedido.getRetirar()){
-            RadioButton rb = findViewById(R.id.optPedidoRetira);
-            rb.setChecked(true);
-            rb.setEnabled(false);
-            findViewById(R.id.optPedidoEnviar).setEnabled(false);
-
-            direccion.setEnabled(false);
-            hora.setText("");
-            hora.setEnabled(false);
-
-        }else{
-            RadioButton rb = findViewById(R.id.optPedidoEnviar);
-            rb.setChecked(true);
-            rb.setEnabled(false);
-            findViewById(R.id.optPedidoRetira).setEnabled(false);
-
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            hora.setText(sdf.format(pedido.getFecha()));
-            hora.setEnabled(false);
-
-
-            direccion.setText(pedido.getDireccionEnvio());
-            direccion.setEnabled(false);
-        }
-
-
-
-        listViewDetalle = findViewById(R.id.lstPedidoItems);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, pedido.getDetalle());
-        listViewDetalle.setChoiceMode(ListView.CHOICE_MODE_NONE);
-        listViewDetalle.setAdapter(adapter);
-
-        ((TextView)findViewById(R.id.lblTotalPedido)).setText("Costo total: $"+pedido.total().toString());
-
-        findViewById(R.id.btnPedidoAddProducto).setEnabled(false);
-        findViewById(R.id.btnPedidoQuitarProducto).setEnabled(false);
-        findViewById(R.id.btnPedidoHacerPedido).setEnabled(false);
-        findViewById(R.id.btnPedidoVolver).setOnClickListener(new View.OnClickListener() {
+        new Thread(new Runnable() {
             @Override
-            public void onClick(View v) {
-                finish();
+            public void run() {
+                pedido = db.buscarPedidoById(id);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        EditText edtPedidoCorreo=findViewById(R.id.edtPedidoCorreo);
+                        edtPedidoCorreo.setText(pedido.getMailContacto());
+                        edtPedidoCorreo.setEnabled(false);
+
+                        EditText hora = findViewById(R.id.edtPedidoHoraEntrega);
+                        EditText direccion = findViewById(R.id.edtPedidoDireccion);
+
+                        if(pedido.getRetirar()){
+                            RadioButton rb = findViewById(R.id.optPedidoRetira);
+                            rb.setChecked(true);
+                            rb.setEnabled(false);
+                            findViewById(R.id.optPedidoEnviar).setEnabled(false);
+
+                            direccion.setEnabled(false);
+                            hora.setText("");
+                            hora.setEnabled(false);
+
+                        }else{
+                            RadioButton rb = findViewById(R.id.optPedidoEnviar);
+                            rb.setChecked(true);
+                            rb.setEnabled(false);
+                            findViewById(R.id.optPedidoRetira).setEnabled(false);
+
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                            hora.setText(sdf.format(pedido.getFecha()));
+                            hora.setEnabled(false);
+
+
+                            direccion.setText(pedido.getDireccionEnvio());
+                            direccion.setEnabled(false);
+                        }
+
+
+
+                        listViewDetalle = findViewById(R.id.lstPedidoItems);
+                        adapter = new ArrayAdapter<>(NuevoPedidoActivity.this, android.R.layout.simple_list_item_1, pedido.getDetalle());
+                        listViewDetalle.setChoiceMode(ListView.CHOICE_MODE_NONE);
+                        listViewDetalle.setAdapter(adapter);
+
+                        ((TextView)findViewById(R.id.lblTotalPedido)).setText("Costo total: $"+pedido.total().toString());
+
+                        findViewById(R.id.btnPedidoAddProducto).setEnabled(false);
+                        findViewById(R.id.btnPedidoQuitarProducto).setEnabled(false);
+                        findViewById(R.id.btnPedidoHacerPedido).setEnabled(false);
+                        findViewById(R.id.btnPedidoVolver).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                finish();
+                            }
+                        });
+                    }
+                });
+
             }
-        });
+        }).start();
+
+
+
 
     }
 }

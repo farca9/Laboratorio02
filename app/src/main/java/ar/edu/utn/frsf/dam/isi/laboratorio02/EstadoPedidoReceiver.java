@@ -29,128 +29,135 @@ public class EstadoPedidoReceiver extends BroadcastReceiver {
     public static int idGen=0;
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
 
-        PedidoDAO pedidoRepository = MyDatabase.getInstance(context).getPedidoDAO();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-        if(intent.getAction() == null){
-            return;
-        }
-        else {
+                MyDatabase db = MyDatabase.getInstance(context);
 
-            if(intent.getAction()==ESTADO_ACEPTADO){
+                if(intent.getAction() == null){
+                    return;
+                }
+                else {
 
-                if(intent.hasExtra("idPedido")){
+                    if(intent.getAction()==ESTADO_ACEPTADO){
 
-                    Pedido pedido = pedidoRepository.buscarPorId(intent.getIntExtra("idPedido",-1));
+                        if(intent.hasExtra("idPedido")){
 
-                    //LAB 03 - pt1
-                    //Toast.makeText(context, "Pedido para "+pedido.getMailContacto()+" ha cambiado de estado a ACEPTADO", Toast.LENGTH_SHORT).show();
+                            Pedido pedido = db.buscarPedidoById(intent.getIntExtra("idPedido",-1));
 
-                    //LAB 03 - pt2
-                        Intent i = new Intent(context,NuevoPedidoActivity.class);
-                        i.putExtra("idSeleccionado",pedido.getId());
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            //LAB 03 - pt1
+                            //Toast.makeText(context, "Pedido para "+pedido.getMailContacto()+" ha cambiado de estado a ACEPTADO", Toast.LENGTH_SHORT).show();
 
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"CANAL01");
+                            //LAB 03 - pt2
+                            Intent i = new Intent(context,NuevoPedidoActivity.class);
+                            i.putExtra("idSeleccionado",pedido.getId());
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                        builder.setContentTitle("Tu pedido fue aceptado");
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"CANAL01");
 
-                        String descripcion = "El costo sera de $"+pedido.total().toString();
-                        if(!pedido.getRetirar()){
-                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                            descripcion+="\nHora de envio prevista: "+sdf.format(pedido.getFecha());
-                        }else{
-                            descripcion+="\nRetirar en el local";
+                            builder.setContentTitle("Tu pedido fue aceptado");
+
+                            String descripcion = "El costo sera de $"+pedido.total().toString();
+                            if(!pedido.getRetirar()){
+                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                                descripcion+="\nHora de envio prevista: "+sdf.format(pedido.getFecha());
+                            }else{
+                                descripcion+="\nRetirar en el local";
+                            }
+
+                            builder.setStyle( new NotificationCompat.BigTextStyle().bigText(descripcion));
+
+                            builder.setSmallIcon(R.drawable.shrimp);
+
+                            builder.setContentIntent(PendingIntent.getActivity(context,1,i, PendingIntent.FLAG_UPDATE_CURRENT));
+
+                            builder.setAutoCancel(true);
+
+                            //Cuando se usan distintas notificaciones se duplican las notificaciones, por la naturaleza del codigo del Runnable
+                            idGen++;
+                            NotificationManagerCompat.from(context).notify(/*idGen*/1,builder.build());
+
                         }
 
-                        builder.setStyle( new NotificationCompat.BigTextStyle().bigText(descripcion));
-
-                        builder.setSmallIcon(R.drawable.shrimp);
-
-                        builder.setContentIntent(PendingIntent.getActivity(context,1,i, PendingIntent.FLAG_UPDATE_CURRENT));
-
-                        builder.setAutoCancel(true);
-
-                        //Cuando se usan distintas notificaciones se duplican las notificaciones, por la naturaleza del codigo del Runnable
-                        idGen++;
-                        NotificationManagerCompat.from(context).notify(/*idGen*/1,builder.build());
-
-                }
-
-            }
-
-            if(intent.getAction()==ESTADO_EN_PREPARACION){
-
-                if(intent.hasExtra("idPedido")){
-
-                    Pedido pedido = pedidoRepository.buscarPorId(intent.getIntExtra("idPedido",-1));
-
-                    Intent i = new Intent(context, HistorialPedidosActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "CANAL01");
-
-                    builder.setContentText("Tu pedido esta en preparacion");
-
-                    String descripcion = "El costo sera de $"+pedido.total().toString();
-                    if(!pedido.getRetirar()){
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                        descripcion+="\nHora de envio prevista: "+sdf.format(pedido.getFecha());
-                    }else{
-                        descripcion+="\nRetirar en el local";
                     }
 
-                    builder.setStyle( new NotificationCompat.BigTextStyle().bigText(descripcion));
+                    if(intent.getAction()==ESTADO_EN_PREPARACION){
 
-                    builder.setSmallIcon(R.drawable.shrimp);
+                        if(intent.hasExtra("idPedido")){
 
-                    builder.setContentIntent(PendingIntent.getActivity(context,1,i, PendingIntent.FLAG_UPDATE_CURRENT));
+                            Pedido pedido = db.buscarPedidoById(intent.getIntExtra("idPedido",-1));
 
-                    builder.setAutoCancel(true);
+                            Intent i = new Intent(context, HistorialPedidosActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                    idGen++;
-                    NotificationManagerCompat.from(context).notify(idGen,builder.build());
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "CANAL01");
 
-                }
-            }
+                            builder.setContentText("Tu pedido esta en preparacion");
 
-            if(intent.getAction() == ESTADO_LISTO){
+                            String descripcion = "El costo sera de $"+pedido.total().toString();
+                            if(!pedido.getRetirar()){
+                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                                descripcion+="\nHora de envio prevista: "+sdf.format(pedido.getFecha());
+                            }else{
+                                descripcion+="\nRetirar en el local";
+                            }
 
-                if(intent.hasExtra("idPedido")){
+                            builder.setStyle( new NotificationCompat.BigTextStyle().bigText(descripcion));
 
-                    Pedido pedido = pedidoRepository.buscarPorId(intent.getIntExtra("idPedido",-1));
+                            builder.setSmallIcon(R.drawable.shrimp);
 
-                    Intent i = new Intent(context, HistorialPedidosActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            builder.setContentIntent(PendingIntent.getActivity(context,1,i, PendingIntent.FLAG_UPDATE_CURRENT));
 
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "CANAL01");
+                            builder.setAutoCancel(true);
 
-                    builder.setContentText("Tu pedido esta listo");
+                            idGen++;
+                            NotificationManagerCompat.from(context).notify(idGen,builder.build());
 
-                    String descripcion = "El costo sera de $"+pedido.total().toString();
-                    if(!pedido.getRetirar()){
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                        descripcion+="\nHora de envio prevista: "+sdf.format(pedido.getFecha());
-                    }else{
-                        descripcion+="\nRetirar en el local";
+                        }
                     }
 
-                    builder.setStyle( new NotificationCompat.BigTextStyle().bigText(descripcion));
+                    if(intent.getAction() == ESTADO_LISTO){
 
-                    builder.setSmallIcon(R.drawable.shrimp);
+                        if(intent.hasExtra("idPedido")){
 
-                    builder.setContentIntent(PendingIntent.getActivity(context,1,i, PendingIntent.FLAG_UPDATE_CURRENT));
+                            Pedido pedido = db.buscarPedidoById(intent.getIntExtra("idPedido",-1));
 
-                    builder.setAutoCancel(true);
+                            Intent i = new Intent(context, HistorialPedidosActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                    idGen++;
-                    NotificationManagerCompat.from(context).notify(idGen,builder.build());
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "CANAL01");
+
+                            builder.setContentText("Tu pedido esta listo");
+
+                            String descripcion = "El costo sera de $"+pedido.total().toString();
+                            if(!pedido.getRetirar()){
+                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                                descripcion+="\nHora de envio prevista: "+sdf.format(pedido.getFecha());
+                            }else{
+                                descripcion+="\nRetirar en el local";
+                            }
+
+                            builder.setStyle( new NotificationCompat.BigTextStyle().bigText(descripcion));
+
+                            builder.setSmallIcon(R.drawable.shrimp);
+
+                            builder.setContentIntent(PendingIntent.getActivity(context,1,i, PendingIntent.FLAG_UPDATE_CURRENT));
+
+                            builder.setAutoCancel(true);
+
+                            idGen++;
+                            NotificationManagerCompat.from(context).notify(idGen,builder.build());
+
+                        }
+                    }
 
                 }
-            }
 
-        }
+            }
+        }).start();
 
     }
 }
